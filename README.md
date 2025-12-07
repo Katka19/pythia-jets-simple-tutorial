@@ -1,18 +1,24 @@
 # Jets + Pythia
 
-[![Github Codespace](https://img.shields.io/badge/open-GH_Codespaces-blue?logo=github)](https://codespaces.new/aprozo/pythia-jets-simple-tutorial?quickstart=1)
+[![Github Codespace](https://img.shields.io/badge/open-GH_Codespaces-blue?logo=github)](https://codespaces.new/matonoli/fujs-pythia-jets?quickstart=1)
 
-This is a self-contained tutorial for simple generating Pythia event, running [FastJet](https://fastjet.fr/) over it and analyzing jets
+This is a self-contained tutorial for simple generating Pythia event, running [FastJet](https://fastjet.fr/) over it and analyzing jets. It was originally created by `aprozo` for the **02FUJS course at FNSPE CTU in Prague** and modified by me into a concrete exercise. It is meant to be followed with an accompanying worksheet/quiz in MS Teams.
 
 ---
 
 ## How to start:
 
-For running on Github Codespaces submit an application for Free [Github Education](https://github.com/education) benefits.
-Then click on [Github Codespace button](https://codespaces.new/aprozo/pythia-jets-simple-tutorial?quickstart=1)
-to start a container (predefined software environment).
+To run, you will need a Github account.
+Then click on the [Github Codespace button](https://codespaces.new/matonoli/fujs-pythia-jets?quickstart=1)
+to start a container (predefined software environment). The first setup might take a couple of minutes to finish.
 
 ## Running Steps
+
+Relevant files:
+
+`makeTree.cc` - responsible for generating events with Pythia and storing reconstructed jets in a TTree
+
+`anaTree.cpp` - basic analysis on the jets and storing histograms
 
 Format for executable arguments : `pTHatMin pTHatMax|inf [nEvents=50000]`
 For example, generating events with 10 < ptHat< 20 Gev/c for 1000 events would be:
@@ -21,7 +27,7 @@ make
 ./makeTree 10 20 1000
 ```
 
-Parameters can be tuned in `makeTree.cc`
+Further parameters can be tuned in `makeTree.cc` .
 
 ```cpp
   const double jetRadius = 0.4;

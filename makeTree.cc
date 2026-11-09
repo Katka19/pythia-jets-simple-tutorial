@@ -1,13 +1,10 @@
 // main.cc
 #include "Pythia8/Pythia.h"
 #include "fastjet/ClusterSequence.hh"
-<<<<<<< HEAD
 #include "fastjet/Selector.hh"
-=======
 #include "fastjet/AreaDefinition.hh"
 #include "fastjet/ClusterSequenceArea.hh"
 #include "fastjet/GhostedAreaSpec.hh"
->>>>>>> 41726f8 (added jet area + other finalising modifications)
 
 #include "TFile.h"
 #include "TH1D.h"
@@ -35,6 +32,7 @@ struct MyEvent {
   std::vector<double> jetPt;
   std::vector<double> jetEta;
   std::vector<double> jetPhi;
+  std::vector<double> jetArea;
   std::vector<int>    jetNConstituent;
 
   // constituent information
@@ -58,6 +56,7 @@ struct MyEvent {
     jetPt.clear();
     jetEta.clear();
     jetPhi.clear();
+    jetArea.clear();
     jetNConstituent.clear();
 
     constituentJetIndex.clear();
@@ -84,6 +83,7 @@ void makeBranches(TTree* tree, MyEvent& data) {
   tree->Branch("jetPt",     &data.jetPt);
   tree->Branch("jetEta",    &data.jetEta);
   tree->Branch("jetPhi",    &data.jetPhi);
+  tree->Branch("jetArea",    &data.jetArea);
   tree->Branch("jetNConstituent", &data.jetNConstituent);
 
   tree->Branch("constituentJetIndex", &data.constituentJetIndex);
@@ -164,25 +164,8 @@ int main(int argc, char *argv[]) {
   TFile *fout = new TFile(outFile, "RECREATE");
   TTree *tree = new TTree("events", "Jet events");
 
-<<<<<<< HEAD
   MyEvent data;
   makeBranches(tree, data);
-=======
-  // Jet branches (store up to 100 jets in single event)
-  const int kMaxJets = 100;
-
-// jet branches
-  int nJets = 0;
-  double pt[kMaxJets];
-  double eta[kMaxJets];
-  double phi[kMaxJets];
-  double area[kMaxJets];
-  tree->Branch("nJets", &nJets, "nJets/I");
-  tree->Branch("pt", pt, "pt[nJets]/D");
-  tree->Branch("eta", eta, "eta[nJets]/D");
-  tree->Branch("phi", phi, "phi[nJets]/D");
-  tree->Branch("area", area, "area[nJets]/D");
->>>>>>> 41726f8 (added jet area + other finalising modifications)
 
   // -----------------------------
   // Event loop
@@ -218,29 +201,19 @@ int main(int argc, char *argv[]) {
     // Run FastJet
     // -----------------------------
     fastjet::JetDefinition jetDefinition(fastjet::antikt_algorithm, jetRadius);
-<<<<<<< HEAD
     fastjet::ClusterSequence clusterSequence(particlesForJets, jetDefinition);
-=======
-    //fastjet::JetDefinition jetDefinition(fastjet::cambridge_aachen_algorithm, jetRadius);
->>>>>>> 41726f8 (added jet area + other finalising modifications)
 
     fastjet::Selector selectEta = fastjet::SelectorAbsEtaMax(jetEtaMax);
     fastjet::Selector selectPt  = fastjet::SelectorPtMin(jetPtMin);
     fastjet::Selector selectJets = selectPt && selectEta;
 
-<<<<<<< HEAD
     std::vector<fastjet::PseudoJet> inclusiveJets = clusterSequence.inclusive_jets();
     std::vector<fastjet::PseudoJet> sortedJets    = fastjet::sorted_by_pt(inclusiveJets);
     std::vector<fastjet::PseudoJet> selectedJets  = selectJets(sortedJets);
-=======
+
     fastjet::GhostedAreaSpec areaSpec(2.5);
     fastjet::AreaDefinition areaDefinition(fastjet::active_area, areaSpec);
     fastjet::ClusterSequenceArea clusterSeqArea(particlesContainer, jetDefinition, areaDefinition);
-
-    auto inclusive_jets = clusterSeqArea.inclusive_jets();
-    auto sorted_jets = fastjet::sorted_by_pt(inclusive_jets); // here
-    auto selected_jets = select_pt_eta(sorted_jets);
->>>>>>> 41726f8 (added jet area + other finalising modifications)
 
     // -----------------------------
     // Loop over jets
@@ -248,11 +221,11 @@ int main(int argc, char *argv[]) {
     for (size_t iJet = 0; iJet < selectedJets.size(); ++iJet) {
       const fastjet::PseudoJet &jet = selectedJets[iJet];
 
-<<<<<<< HEAD
       // save jet info
       data.jetPt.push_back(jet.pt());
       data.jetEta.push_back(jet.eta());
       data.jetPhi.push_back(TVector2::Phi_mpi_pi(jet.phi()));
+      data.jetArea.push_back(jet.area());
       data.jetNConstituent.push_back(0); // we will count constituents below
 
       // get constituents of this jet
@@ -284,14 +257,6 @@ int main(int argc, char *argv[]) {
 
         data.jetNConstituent.back()++;
       }
-=======
-    for (size_t iJet = 0; iJet < selected_jets.size(); ++iJet) {
-      pt[iJet] = selected_jets[iJet].pt();
-      eta[iJet] = selected_jets[iJet].eta();
-      float phiNormalized = TVector2::Phi_mpi_pi(selected_jets[iJet].phi()); // normalize to [-pi, pi]
-      phi[iJet] = phiNormalized;
-      area[iJet] = selected_jets[iJet].area();
->>>>>>> 41726f8 (added jet area + other finalising modifications)
     }
 
     data.nJets = (int)data.jetPt.size();

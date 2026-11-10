@@ -201,19 +201,22 @@ int main(int argc, char *argv[]) {
     // Run FastJet
     // -----------------------------
     fastjet::JetDefinition jetDefinition(fastjet::antikt_algorithm, jetRadius);
-    fastjet::ClusterSequence clusterSequence(particlesForJets, jetDefinition);
+
+    // Calculate jet areas using active area ghosts
+    fastjet::GhostedAreaSpec areaSpec(2.5);
+    fastjet::AreaDefinition areaDefinition(fastjet::active_area, areaSpec);
+
+    // Cluster particles
+    fastjet::ClusterSequenceArea clusterSequence(particlesForJets, jetDefinition, areaDefinition);
 
     fastjet::Selector selectEta = fastjet::SelectorAbsEtaMax(jetEtaMax);
     fastjet::Selector selectPt  = fastjet::SelectorPtMin(jetPtMin);
     fastjet::Selector selectJets = selectPt && selectEta;
 
+    // Obtain jets from the clustering
     std::vector<fastjet::PseudoJet> inclusiveJets = clusterSequence.inclusive_jets();
     std::vector<fastjet::PseudoJet> sortedJets    = fastjet::sorted_by_pt(inclusiveJets);
     std::vector<fastjet::PseudoJet> selectedJets  = selectJets(sortedJets);
-
-    fastjet::GhostedAreaSpec areaSpec(2.5);
-    fastjet::AreaDefinition areaDefinition(fastjet::active_area, areaSpec);
-    fastjet::ClusterSequenceArea clusterSeqArea(particlesContainer, jetDefinition, areaDefinition);
 
     // -----------------------------
     // Loop over jets

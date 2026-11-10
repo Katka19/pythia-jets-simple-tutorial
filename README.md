@@ -2,7 +2,7 @@
 
 [![Github Codespace](https://img.shields.io/badge/open-GH_Codespaces-blue?logo=github)](https://codespaces.new/matonoli/fujs-pythia-jets?quickstart=1)
 
-This is a self-contained tutorial for simple generating Pythia event, running [FastJet](https://fastjet.fr/) over it and analyzing jets. It was originally created by `aprozo` for the **02FUJS course at FNSPE CTU in Prague** and modified by me into a concrete exercise. It is meant to be followed with an accompanying worksheet/quiz in MS Teams.
+This is a self-contained tutorial for simple generating Pythia event, running [FastJet](https://fastjet.fr/) over it and analyzing jets. It was originally created by `aprozo` for the **02FUJS course at FNSPE CTU in Prague** and modified into a concrete exercise. It is meant to be followed with an accompanying worksheet/quiz in MS Teams.
 
 ---
 
@@ -42,6 +42,10 @@ After that run for analysis of jet tree which will fill some basic histograms ba
 ```bash
 root -l -b -q anaTree.cpp+
 ```
+
+## Note
+
+The resulting ROOT files may not be displayed correctly when using Safari.
 
 ## Remark: Running on your own laptop
 

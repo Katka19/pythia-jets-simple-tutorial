@@ -9,7 +9,7 @@ This is a self-contained tutorial for simple generating Pythia event, running [F
 ## How to start:
 
 To run, you will need a Github account.
-Then click on the [Github Codespace button](https://codespaces.new/matonoli/fujs-pythia-jets?quickstart=1)
+Then click on the [Github Codespace button](https://codespaces.new/Katka19/pythia-jets-simple-tutorial?quickstart=1)
 to start a container (predefined software environment). The first setup might take a couple of minutes to finish.
 
 ## Running Steps
